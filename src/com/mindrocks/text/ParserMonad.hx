@@ -5,7 +5,7 @@ package com.mindrocks.text;
  * @author sledorze
  */
 
-import com.mindrocks.macros.Monad;
+import com.mindrocks.monads.Monad;
 //import com.mindrocks.text.Parser;
 using com.mindrocks.text.Parser;
 

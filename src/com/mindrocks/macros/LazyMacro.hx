@@ -50,7 +50,7 @@ class LazyMacro {
         function () {
           if (value == null) {
             value = untyped 1; // not null to prevent live lock if it forms a cycle.
-            value = $exp();
+            value = $_exp();
           }
           return value;
         };
