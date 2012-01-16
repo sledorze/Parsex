@@ -1,10 +1,7 @@
 Parser combinator library.
-The original implementation was taken from Scala and adopted to HaXe by
-Stephane Le Dorze.
+The original implementation was taken from Scala.
 
 - dependencies:
-  * tinkerbell https://github.com/back2dos/tinkerbell.git
-  optional:
   * monax if you want to use monad like syntax:
     https://github.com/sledorze/monax
 
