@@ -1,6 +1,11 @@
 Parser combinator library.
-The original implementation was taken from Scala.
-Special thanks go to Marc Weber and Laurence Taylor for supporting the effort.
+
+More info here:
+http://lambdabrella.blogspot.com/2012/01/packrat-parser-combinators-for-haxe.html
+
+The original implementation was inspired from Scala.
+
+Special thanks goes to Marc Weber and Laurence Taylor for supporting the effort.
 
 - dependencies:
   * tinkerbell:
