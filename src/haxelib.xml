@@ -1,0 +1,7 @@
+<project name="Parsex" url="https://github.com/sledorze/Parsex" license="BSD">
+    <user name="sledorze"/>
+    <tag v="cross"/>
+    <tag v="utility"/>
+    <description>General Parser API providing Packrat Parsers combinators and a Monadic support (requiers Monax)</description>
+    <version name="1.0">Initial release, everything is working correctly</version>
+</project>
