@@ -1,6 +1,6 @@
 Parser combinator library.
 The original implementation was taken from Scala.
-Special thanks go to Mac Weber and Laurence Taylor for supporting the effort.
+Special thanks go to Marc Weber and Laurence Taylor for supporting the effort.
 
 - dependencies:
   * monax if you want to use monad like syntax:
