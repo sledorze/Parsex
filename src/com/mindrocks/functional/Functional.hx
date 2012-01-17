@@ -93,7 +93,7 @@ class List<T> {
     }
   }
 
-  public function map<A,B>(l : List<A>, p : A -> B) : List<B>  {
+  public static function map<A,B>(l : List<A>, p : A -> B) : List<B>  {
     if (l.isEmpty())
       return new Nil();
     else

@@ -29,12 +29,13 @@ class LazyMacro {
     } else {
 */    
     return
-      tink.macro.tools.AST.build({
+//      tink.macro.tools.AST.build({
+      Staged.exp({
         var value = null;
         function () {
           if (value == null) {            
             value = untyped 1; // not null to prevent live lock if it forms a cycle.
-            value = $exp;
+            value = $_exp;
           }
           return value;
         };        
@@ -44,12 +45,13 @@ class LazyMacro {
 
   @:macro public static function lazyF(exp : Expr) : Expr return {
     return
-      tink.macro.tools.AST.build({
+//      tink.macro.tools.AST.build({
+      Staged.exp({
         var value = null;
         function () {
           if (value == null) {
             value = untyped 1; // not null to prevent live lock if it forms a cycle.
-            value = $exp();
+            value = $_exp();
           }
           return value;
         };

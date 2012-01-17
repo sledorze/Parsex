@@ -7,10 +7,11 @@ package ;
 
  import haxe.macro.Expr;
  
-class Main {
+class Test {
 	
 	static function main() {
-    ParserTest.jsonTest();    
+    ParserTest.jsonTest();
+    LangParser.langTest();
 	}
   
 }

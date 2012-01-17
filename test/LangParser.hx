@@ -187,8 +187,8 @@ class LangParser {
           var p = rest.textAround();
           output(p.text);
           output(p.indicator);          
-          err.map(function (err) {
-            output("Error at " + err.pos + " : " + err.msg);
+          err.map(function (error) {
+            output("Error at " + error.pos + " : " + error.msg);
           });
           
           
