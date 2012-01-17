@@ -3,8 +3,12 @@ The original implementation was taken from Scala.
 Special thanks go to Marc Weber and Laurence Taylor for supporting the effort.
 
 - dependencies:
+  * tinkerbell:
+  https://github.com/back2dos/tinkerbell
+    
+- optional:
   * monax if you want to use monad like syntax:
-    https://github.com/sledorze/monax
+  https://github.com/sledorze/monax
 
 TODO:
 - implement benchmarks for all platforms
