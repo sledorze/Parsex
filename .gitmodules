@@ -1,3 +1,0 @@
-[submodule "dep/monax"]
-	path = dep/monax
-	url = git://github.com/sledorze/monax.git
