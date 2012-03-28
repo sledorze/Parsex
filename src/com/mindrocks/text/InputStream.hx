@@ -117,7 +117,7 @@ class Indexable<C,T>{
 	public var length (get_length, null):Int;
 	private function get_length():Int {
 		throw "abstract method";
-		return null;
+		return -1;
 	}
 }
 
