@@ -21,34 +21,29 @@ class LazyMacro {
     };
   }
   
-  @:macro public static function lazy(exp : Expr) : Expr {
-  /*  
-    if ( alreadyLazy(Context.typeof(exp))) {
-      trace("EXP " + exp);
-      return exp;
-    } else {
-*/    
+  @:macro public static function lazy(exp : Expr) : Expr {    
     return
       tink.macro.tools.AST.build({
         var value = null;
+        var computationRequested = false;
         function () {
-          if (value == null) {            
-            value = untyped 1; // not null to prevent live lock if it forms a cycle.
+          if (!computationRequested) {            
+            computationRequested = true; // not null to prevent live lock if it forms a cycle.
             value = $exp;
           }
           return value;
         };        
       });
-//    }
   }
 
   @:macro public static function lazyF(exp : Expr) : Expr return {
     return
       tink.macro.tools.AST.build({
         var value = null;
+        var computationRequested = false;
         function () {
-          if (value == null) {
-            value = untyped 1; // not null to prevent live lock if it forms a cycle.
+          if (!computationRequested) {
+            computationRequested = true; // not null to prevent live lock if it forms a cycle.
             value = $exp();
           }
           return value;
