@@ -223,8 +223,10 @@ typedef Head = {
       case Failure(_, rest, _): rest;
     }
 
-  public static function getHead<I,T>(hd : Head) : Parser<I,T> return 
-    hd.headParser.castType()
+  public static function getHead < I, T > (hd : Head) : Parser < I, T > {
+    var r : Parser < I, T > = untyped hd.headParser;
+    return r;
+  }
     
   static var _parserUid = 0;
   static function parserUid() {
@@ -237,12 +239,14 @@ typedef Head = {
       case None: throw "lrAnswer with no head!!";
       case Some(head): 
         if (head.getHead() != p) /*not head rule, so not growing*/{
-          return growable.seed.castType();
+          var r : ParseResult<I,T> = untyped growable.seed;
+          return r;
         } else {
           input.updateCacheAndGet(genKey, MemoParsed(growable.seed));
           switch (growable.seed) {
             case Failure(_, _, _) :
-              return growable.seed.castType();
+              var r : ParseResult<I,T> = untyped growable.seed;
+              return r;
             case Success(_, _) :
               return grow(p, genKey, input, head); /*growing*/ 
           }
@@ -306,7 +310,9 @@ typedef Head = {
           //we're done with growing, we can remove data from recursion head
           rest.removeRecursionHead();
           switch (rest.getFromCache(genKey).get()) {
-            case MemoParsed(ans): return ans.castType();
+            case MemoParsed(ans):
+              var r : ParseResult<I, T> = untyped ans;
+              return r;
             default: throw "impossible match";
           }
         }
@@ -319,7 +325,8 @@ typedef Head = {
           
         } else {
           rest.removeRecursionHead();
-          return oldRes.castType();
+          var r : ParseResult<I,T> = untyped oldRes;
+          return r;
         }
         
     }
@@ -361,9 +368,11 @@ typedef Head = {
             switch(mEntry) {
               case  MemoLR(recDetect):
                 setupLR(_p(), input, recDetect);
-                return recDetect.seed.castType();
+                var r : ParseResult<I,T> = untyped recDetect.seed;
+                return r;
               case  MemoParsed(ans):
-                return ans.castType();
+                var r : ParseResult<I,T> = untyped ans;
+                return r;
             }
         }
         
@@ -387,9 +396,13 @@ typedef Head = {
             var res = p2()(r);
             switch (res) {
               case Success(m2, r) : return Success(f(m1, m2), r);
-              case Failure(_, _, _): return res.castType();
+              case Failure(_, _, _):
+                var r : ParseResult<I, V> = untyped res;
+                return r;
             }
-          case Failure(_, _, _): return res.castType();
+          case Failure(_, _, _):
+            var r : ParseResult<I, V> = untyped res;
+            return r;
         }
       }
     })
@@ -397,14 +410,14 @@ typedef Head = {
   inline public static function and < I, T, U > (p1 : Void -> Parser<I,T>, p2 : Void -> Parser<I,U>) : Void -> Parser < I, Tuple2 < T, U >> return
     andWith(p1, p2, Tuples.t2)
     
-  inline static function sndParam<A,B>(_, b) return b
+    inline public static function sndParam<A,B>(_, b) return b
     
   inline public static function _and < I, T, U > (p1 : Void -> Parser<I,T>, p2 : Void -> Parser<I,U>) : Void -> Parser < I, U > return
     andWith(p1, p2, sndParam)
 
-  inline static function fstParam<A,B>(a, _) return a
+    inline public static function fstParam<A,B>(a, _) return a
 
-  inline public static function and_ < I, T, U > (p1 : Void -> Parser<I,T>, p2 : Void -> Parser<I, U>) : Void -> Parser < I, T > return
+  public static function and_ < I, T, U > (p1 : Void -> Parser<I,T>, p2 : Void -> Parser<I, U>) : Void -> Parser < I, T > return
     andWith(p1, p2, fstParam)
 
   // aka flatmap
@@ -414,7 +427,9 @@ typedef Head = {
         var res = p1()(input);
         switch (res) {
           case Success(m, r): return fp2(m)()(r);
-          case Failure(_, _, _): return res.castType();
+          case Failure(_, _, _):
+            var r : ParseResult<I, U> =  untyped res; //Failure is not parametrized with T and U
+            return r;
         }
       }
     })
@@ -426,7 +441,9 @@ typedef Head = {
         var res = p1()(input);
         switch (res) {
           case Success(m, r): return Success(f(m), r);
-          case Failure(_, _, _): return res.castType();
+          case Failure(_, _, _):
+            var r : ParseResult<I, U> = untyped res;
+            return r;
         };
       }
     })
@@ -434,7 +451,7 @@ typedef Head = {
   static var defaultFail =
     fail("not matched", false);
     
-  static function forPredicate<T>(pred : T -> Bool) return function (x : T) return
+  static public function forPredicate<T>(pred : T -> Bool) return function (x : T) return
     pred(x) ? success(x) : defaultFail  
     
   inline public static function filter<I,T>(p : Void -> Parser<I,T>, pred : T -> Bool) : Void -> Parser <I,T> return
@@ -502,9 +519,10 @@ typedef Head = {
           switch (res) {
             case Success(m, r): arr.push(m); input = r;
             case Failure(_, _, isError):
-              if (isError)
-                return res.castType();
-              else 
+              if (isError) {
+                var r : ParseResult<I, Array<T>> = untyped res;
+                return r;                
+              } else 
                 matches = false;
           }
         }
@@ -513,7 +531,7 @@ typedef Head = {
     })
 
     
-  static function notEmpty<T>(arr:Array<T>) return arr.length>0
+  static public function notEmpty<T>(arr:Array<T>) return arr.length>0
   /*
    * 1..n
    */
@@ -531,7 +549,7 @@ typedef Head = {
    */
   public static function repsep < I,T > (p1 : Void -> Parser<I,T>, sep : Void -> Parser<I,Dynamic> ) : Void -> Parser < I, Array<T> > return
     or(rep1sep(p1, sep), success([]))
-
+    
   /*
    * 0..1
    */
