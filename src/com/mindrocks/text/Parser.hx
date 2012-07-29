@@ -551,6 +551,29 @@ typedef Head = {
     or(rep1sep(p1, sep), success([]))
     
   /*
+   * Produce left recursive application of possible infix binary operators to p1 parsers.
+   *
+   * eg:
+   * chainl1(numberParser, divSymbolParser.then((function (x:Float, y:Float) return x / y).success()));
+   * which operating on 1 / 2 / 3
+   * would parse and evaluate the result of (1 / 2) / 3
+   *
+   * p1 parser must be matched at least once.
+   */
+  public static function chainl1 < I,T > (p1 : Void -> Parser<I,T>, op : Void -> Parser<I,T->T->T> ) : Void -> Parser < I, T >
+  {
+    function rest (x : T) return
+      op.andThen(function (f : T->T->T) return
+        p1.andThen(function (y : T) return
+          rest(f(x, y))
+        )
+      ).or(x.success());
+      
+    return p1.andThen(rest);
+  }
+    
+    
+  /*
    * 0..1
    */
   public static function option < I,T > (p1 : Void -> Parser<I,T>) : Void -> Parser < I,Option<T> > return
