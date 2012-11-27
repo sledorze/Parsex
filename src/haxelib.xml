@@ -3,7 +3,7 @@
     <tag v="cross"/>
     <tag v="utility"/>
     <description>General Parser API providing Packrat Parsers combinators and a Monadic support (requiers monax)</description>
-    <version name="1.2">Fixed monax compatibility issue</version>
+    <version name="1.4">Cope with changes in Haxe</version>
     <depends name="tink_macros"/>
     <depends name="monax"/>
 </project>
