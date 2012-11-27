@@ -8,6 +8,7 @@ using com.mindrocks.functional.Functional;
 import com.mindrocks.macros.LazyMacro;
 
 using Lambda;
+using com.mindrocks.text.Parser; 
 
 /**
  * ...
@@ -56,7 +57,6 @@ class ResultObj {
     }
 
 }
-using com.mindrocks.text.Parser; 
 
 class MemoObj {
   

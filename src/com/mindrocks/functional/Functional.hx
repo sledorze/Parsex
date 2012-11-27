@@ -35,16 +35,16 @@ class Functionnal {
 // such.
 class List<T> {
   
-  public var head (getHead, null): T;
-  public var tail (getTail, null): List<T>;
+  public var head (get_head, null): T;
+  public var tail (get_tail, null): List<T>;
 
   private var _headV : T;
   private var _tailV : List<T>;
   
-  function getHead() : T {
+  function get_head() : T {
     return _headV;
   }
-  function getTail() : List<T> {
+  function get_tail() : List<T> {
     return _tailV;
   }
     
@@ -106,7 +106,7 @@ class List<T> {
       if (Std.is(l, Nil))
         if (r == null)
           throw "last called on Nil";
-        else return r.getHead()
+        else return r.get_head()
       else {
         r = l;
         l = l.tail;
@@ -128,11 +128,11 @@ class Nil<T> extends List<T> {
   override public function isEmpty() {
     return true;
   }
-  override function getHead() : T {
+  override function get_head() : T {
     throw "Cannot access head of Nil";
     return null;
   }
-  override function getTail() : List<T> {
+  override function get_tail() : List<T> {
     throw "Cannot access tail of Nil";
     return null;
   }
