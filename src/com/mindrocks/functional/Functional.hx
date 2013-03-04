@@ -53,7 +53,7 @@ class List<T> {
     this._tailV = t;
   }
   inline public static function nil<T>() : List<T>
-    return Nil._nil
+    return Nil._nil;
     
   inline public static function cons<T>(t : List<T>, v : T) : List<T> {
     return new List(v, t);
