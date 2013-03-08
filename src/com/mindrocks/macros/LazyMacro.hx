@@ -23,7 +23,7 @@ class LazyMacro {
     };
   }
   
-  @:macro public static function lazy<T>(exp : ExprOf<T>) : ExprOf<Void -> T> {    
+  macro public static function lazy<T>(exp : ExprOf<T>) : ExprOf<Void -> T> {    
     var res = 
       macro {
         var value = null;
@@ -48,7 +48,7 @@ class LazyMacro {
     return res;
   }
 
-  @:macro public static function lazyF<T>(exp : ExprOf<Void -> T>) : ExprOf<Void -> T> {
+  macro public static function lazyF<T>(exp : ExprOf<Void -> T>) : ExprOf<Void -> T> {
     return
       macro {
         var value = null;
