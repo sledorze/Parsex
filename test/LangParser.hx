@@ -7,6 +7,7 @@ package ;
 
 import com.mindrocks.text.Parser;
 import haxe.Timer;
+import js.Browser;
 import js.JQuery;
 import js.Lib;
 using com.mindrocks.text.Parser;
@@ -77,17 +78,18 @@ class LambdaTest {
   static  var retP = ("\r".identifier().or("\n".identifier())).lazyF();
   
   static  var spacingP =
+	LazyMacro.lazyF(
     [
       spaceP.oneMany(),
       tabP.oneMany(),
-    ].ors().many().lazyF();
+    ].ors().many());
   
   static  var spacingOrRetP =
-    [
+	LazyMacro.lazyF([
       spaceP.oneMany(),
       tabP.oneMany(),
       retP.oneMany()
-    ].ors().many().lazyF();
+    ].ors().many());
     
   static  var stringStartP = withSpacing("\"".identifier());
   static  var stringStopP = "\"".identifier();
@@ -101,11 +103,11 @@ class LambdaTest {
   static  var arrowP = withSpacing("=>".identifier());
   static  var dotP = ".".identifier();
   
-  static function maybeRet<T>(p : Void -> Parser<String, T>) return 
-    spacingOrRetP.option()._and(p)
+  static function maybeRet<T>(p : Void -> Parser<String, T>) : Void -> Parser<String, T> return 
+    spacingOrRetP.option()._and(p);
     
-  static function withSpacing<T>(p : Void -> Parser<String, T>) return
-    spacingP._and(p).lazyF()
+  static function withSpacing<T>(p : Void -> Parser<String, T>) : Void -> Parser<String, T> return
+  LazyMacro.lazyF( spacingP._and(p) );
 
   static var identifierP =
     withSpacing(identifierR.regexParser()).tag("identifier").lazyF();
@@ -132,10 +134,10 @@ class LambdaTest {
     ].ors().then(Primitive).tag("primitive").lazyF();
     
   static var lambdaP : Void -> Parser<String, RExpression> =
-    identifierP.and_(arrowP).and(maybeRet(expressionP.commit())).then(function (p) return LambdaExpr(p.a, p.b)).tag("lambda").lazyF();
+	LazyMacro.lazyF( identifierP.and_(arrowP).and(maybeRet(expressionP.commit())).then(function (p) return LambdaExpr(p.a, p.b)).tag("lambda") );
   
   static var applicationP : Void -> Parser<String, RExpression> =
-    rExpressionP.and(identifierP).then(function (p) return Apply(p.a, p.b)).tag("application").lazyF();
+	LazyMacro.lazyF( rExpressionP.and(identifierP).then(function (p) return Apply(p.a, p.b)).tag("application") );
   
   static var rExpressionP : Void -> Parser<String, RExpression> =
     [
@@ -146,21 +148,25 @@ class LambdaTest {
     ].ors().memo().tag("RExpression").lazyF();
     
   static var letExpressionP : Void -> Parser<String, LetExpression> =
-    identifierP.and_(equalsP).and(maybeRet(rExpressionP.commit())).then(function (p) return { ident: p.a, expr: p.b }).tag("let expression").lazyF();
+    LazyMacro.lazyF( identifierP.and_(equalsP).and(maybeRet(rExpressionP.commit())).then(function (p) return { ident: p.a, expr: p.b }).tag("let expression") );
   
   public static var expressionP : Void -> Parser<String, Expression> =
-    (letP._and(maybeRet(maybeRet(letExpressionP).rep1sep(commaP.or(retP)).and_(commaP.option())).and_(maybeRet(inP)).commit())).option().and(maybeRet(rExpressionP)).then(function (p) {
-      var lets =
-        switch (p.a) {
-          case Some(ls): ls;
-          case None: [];
-        };
-      return { lets : lets, expr : p.b };
-    }).tag("expression").lazyF();
+	LazyMacro.lazyF(
+		(letP._and(maybeRet(maybeRet(letExpressionP).rep1sep(commaP.or(retP)).and_(commaP.option())).and_(maybeRet(inP)).commit())).option().and(maybeRet(rExpressionP)).then(function (p) {
+		  var lets =
+			switch (p.a) {
+			  case Some(ls): ls;
+			  case None: [];
+			};
+		  return { lets : lets, expr : p.b };
+		}).tag("expression")
+	);
     
     
   static var definitionP =
-    maybeRet(identifierP).and_(equalsP).and(maybeRet(expressionP.commit())).then(function (p) return { name : p.a, expr : p.b } ).tag("definition").lazyF();
+	LazyMacro.lazyF(
+		maybeRet(identifierP).and_(equalsP).and(maybeRet(expressionP.commit())).then(function (p) return { name : p.a, expr : p.b } ).tag("definition")
+	);
     
   public static var programP =
     definitionP.many().tag("program").commit().lazyF();
@@ -199,11 +205,6 @@ class LangParser {
   }
   
   public static function langTest() {
-    
-    var elem = Lib.document.getElementById("haxe:trace");
-    if (elem != null) {
-      new JQuery(elem).css("font-family", "Courier New, monospace");      // monospace!
-    }
     
     function toOutput(str : String) {
       trace(StringTools.replace(str, " ", "_"));

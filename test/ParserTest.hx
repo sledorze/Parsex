@@ -57,11 +57,11 @@ class JsonParser {
   static  var retP = ("\r".identifier().or("\n".identifier()));
   
   static  var spacingP =
-    [
+	LazyMacro.lazyF([
       spaceP.oneMany(),
       tabP.oneMany(),
       retP.oneMany()
-    ].ors().many().lazyF();
+    ].ors().many());
   
   static  var leftAccP = withSpacing("{".identifier());
   static  var rightAccP = withSpacing("}".identifier());
@@ -73,7 +73,7 @@ class JsonParser {
   
   
   static function withSpacing<I,T>(p : Void -> Parser<String,T>) return
-    spacingP._and(p)
+    spacingP._and(p);
 
   static var identifierP =
     withSpacing(identifierR.regexParser());
@@ -126,7 +126,7 @@ class LRTest {
   
   static var posNumberP = posNumberR.regexParser().tag("number");
     
-  static var binop = (expr.and_(plusP)).andWith(expr.commit(), function (a, b) return a + " + " + b).tag("binop").lazyF();
+  static var binop = LazyMacro.lazyF( (expr.and_(plusP)).andWith(expr.commit(), function (a, b) return a + " + " + b).tag("binop") );
   public static var expr : Void -> Parser<String,String> = binop.or(posNumberP).memo().tag("expression");
 }
 
@@ -146,7 +146,7 @@ class ParserTest {
 
   static function expectFailure<T> (s:String, parser:Parser<String,T>, at){
     switch (parser(s.reader())) {
-      case Success(res, rest):
+      case Success(res, _):
         trace(res);
         trace("unexpected success, result line above ");
         return false;
@@ -161,11 +161,11 @@ class ParserTest {
     }
   }
 
-  static function expectSucces<A> (s:String, parser: Parser<String, A>, result:A):Bool{
+  static function expectSuccess<A> (s:String, parser: Parser<String, A>, result:A):Bool{
     switch (parser(s.reader())) {
-      case Success(res, rest):
-        if (""+res == ""+result)
-        return true;
+      case Success(res, _):
+        if ( Std.string(res) == Std.string(result) )
+			return true;
         else {
           trace("result does not match: "+res+" expected :"+result);
           return false;
@@ -182,18 +182,9 @@ class ParserTest {
     ok = ok && expectFailure(" {  aaa : aa, bbb :: [cc, dd] } ", JsonParser.jsonParser(), 19);
     ok = ok && expectFailure("5++3+2+3", LRTest.expr(), 2);
 
-    ok = ok && expectSucces("abc", MonadParserTest.parser(), ['a','b','c']);
+    ok = ok && expectSuccess("abc", MonadParserTest.parser(), ["a","b","c"]);
 
-    trace(ok ? "test passed " : "test FAILED!");
-    /*
-    var elem = Lib.document.getElementById("haxe:trace");
-    if (elem != null) {
-      trace("elem[0] " + elem);
-      new JQuery(elem).css("font-family", "Courier New, monospace");      // monospace!
-    }
-    */
-    
-    
+    trace(ok ? "test passed " : "test FAILED!");    
   }
   
 }

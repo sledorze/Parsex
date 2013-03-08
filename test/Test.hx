@@ -10,8 +10,8 @@ package ;
 class Test {
 	
 	static function main() {
-    ParserTest.jsonTest();
-    LangParser.langTest();
+		LangParser.langTest();
+		ParserTest.jsonTest();
 	}
   
 }
