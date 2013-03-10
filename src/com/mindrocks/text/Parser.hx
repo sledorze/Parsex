@@ -36,13 +36,13 @@ typedef MemoKey = String
 
 class ParserObj {
   inline public static function castType<I,T, U>(p : Parser<I,T>) : Parser<I,U> return
-    untyped p;
+	cast(p);
 }
 
 class ResultObj {
 
   inline public static function castType<I,T, U>(p : ParseResult<I,T>) : ParseResult<I,U> return
-    untyped p;
+	cast(p);
 
   public static function posFromResult<I,T>(p : ParseResult<I,T>) : Input<I>
     switch (p) {
@@ -224,8 +224,7 @@ typedef Head = {
     }
 
   public static function getHead < I, T > (hd : Head) : Parser < I, T > {
-    var r : Parser < I, T > = untyped hd.headParser;
-    return r;
+    return cast(hd.headParser);
   }
 
   static var _parserUid = 0;
@@ -239,14 +238,12 @@ typedef Head = {
       case None: throw "lrAnswer with no head!!";
       case Some(head):
         if (head.getHead() != p) /*not head rule, so not growing*/{
-          var r : ParseResult<I,T> = untyped growable.seed;
-          return r;
+          return cast(growable.seed);
         } else {
           input.updateCacheAndGet(genKey, MemoParsed(growable.seed));
           switch (growable.seed) {
             case Failure(_, _, _) :
-              var r : ParseResult<I,T> = untyped growable.seed;
-              return r;
+              return cast(growable.seed);
             case Success(_, _) :
               return grow(p, genKey, input, head); /*growing*/
           }
@@ -310,9 +307,7 @@ typedef Head = {
           //we're done with growing, we can remove data from recursion head
           rest.removeRecursionHead();
           switch (rest.getFromCache(genKey).get()) {
-            case MemoParsed(ans):
-              var r : ParseResult<I, T> = untyped ans;
-              return r;
+            case MemoParsed(ans): return cast(ans);
             default: throw "impossible match";
           }
         }
@@ -325,8 +320,7 @@ typedef Head = {
 
         } else {
           rest.removeRecursionHead();
-          var r : ParseResult<I,T> = untyped oldRes;
-          return r;
+          return cast(oldRes);
         }
 
     }
@@ -368,11 +362,9 @@ typedef Head = {
             switch(mEntry) {
               case  MemoLR(recDetect):
                 setupLR(_p(), input, recDetect);
-                var r : ParseResult<I,T> = untyped recDetect.seed;
-                return r;
+                return cast(recDetect.seed);
               case  MemoParsed(ans):
-                var r : ParseResult<I,T> = untyped ans;
-                return r;
+                return cast(ans);
             }
         }
 
@@ -397,12 +389,10 @@ typedef Head = {
             switch (res) {
               case Success(m2, r) : return Success(f(m1, m2), r);
               case Failure(_, _, _):
-                var r : ParseResult<I, V> = untyped res;
-                return r;
+                return cast(res);
             }
           case Failure(_, _, _):
-            var r : ParseResult<I, V> = untyped res;
-            return r;	
+            return cast(res);
         }
       }
     });
@@ -441,9 +431,7 @@ typedef Head = {
         var res = p1()(input);
         switch (res) {
           case Success(m, r): return Success(f(m), r);
-          case Failure(_, _, _):
-            var r : ParseResult<I, U> = untyped res;
-            return r;
+          case Failure(_, _, _): return cast(res);
         };
       }
     });
@@ -520,8 +508,7 @@ typedef Head = {
             case Success(m, r): arr.push(m); input = r;
             case Failure(_, _, isError):
               if (isError) {
-                var r : ParseResult<I, Array<T>> = untyped res;
-                return r;
+                return cast(res);
               } else
                 matches = false;
           }
@@ -607,10 +594,9 @@ typedef Head = {
 
   public static function withError<I,T>(p : Void -> Parser<I,T>, f : String -> String ) : Void -> Parser<I,T>
     return LazyMacro.lazy(function (input : Input<I>) {
-      var r = p()(input);
-      switch(r) {
+      switch(p()(input)) {
         case Failure(err, input, isError): return Failure(err.report((f(err.head.msg)).errorAt(input)), input, isError);
-        default: return r;
+        case r: return r;
       }
     });
 

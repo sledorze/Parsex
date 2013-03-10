@@ -13,7 +13,7 @@ import haxe.macro.Type;
  */
 
 class LazyMacro {
-  
+	
   macro public static function lazy<T>(exp : ExprOf<T>) : ExprOf<Void -> T> {    
 	return
       macro {
