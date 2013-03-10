@@ -5,7 +5,7 @@ import com.mindrocks.text.InputStream;
 import com.mindrocks.functional.Functional;
 using com.mindrocks.functional.Functional;
 
-import com.mindrocks.macros.LazyMacro;
+using com.mindrocks.macros.LazyMacro;
 
 using Lambda;
 using com.mindrocks.text.Parser;
@@ -382,8 +382,8 @@ typedef Head = {
   public static function fail<I,T>(error : String, isError : Bool) : Void -> Parser <I,T>
     return LazyMacro.lazy(function (input :Input<I>) return Failure(error.errorAt(input).newStack(), input, isError));
 
-  public static function success<I,T>(v : T) : Void -> Parser <I,T>
-    return LazyMacro.lazy(function (input) return Success(v, input));
+  public static function success < I, T > (v : T) : Void -> Parser <I,T>  return
+	(function (input) return Success(v, input)).lazy();
 
   public static function identity<I,T>(p : Void -> Parser<I,T>) : Void -> Parser <I,T> return p;
 
@@ -410,12 +410,12 @@ typedef Head = {
   inline public static function and < I, T, U > (p1 : Void -> Parser<I,T>, p2 : Void -> Parser<I,U>) : Void -> Parser < I, Tuple2 < T, U >> return
     andWith(p1, p2, Tuples.t2);
 
-  inline public static function sndParam<A,B>(_, b) return b;
+  inline public static function sndParam<A,B>(_ : A, b : B) return b;
 
   inline public static function _and < I, T, U > (p1 : Void -> Parser<I,T>, p2 : Void -> Parser<I,U>) : Void -> Parser < I, U > return
     andWith(p1, p2, sndParam);
 
-  inline public static function fstParam<A,B>(a, _) return a;
+  inline public static function fstParam<A,B>(a : A, _ : B) return a;
 
   inline public static function and_ < I, T, U > (p1 : Void -> Parser<I,T>, p2 : Void -> Parser<I, U>) : Void -> Parser < I, T > return
     andWith(p1, p2, fstParam);
@@ -461,7 +461,7 @@ typedef Head = {
    * Generates an error if the parser returns a failure (an error make the choice combinator fail with an error without evaluating alternatives).
    */
   public static function commit < I, T > (p1 : Void -> Parser<I,T>) : Void -> Parser < I, T >
-    return LazyMacro.lazy( {
+    return LazyMacro.lazy({
       function (input) {
         var res = p1()(input);
         switch(res) {
@@ -531,7 +531,7 @@ typedef Head = {
     });
 
 
-  static public function notEmpty<T>(arr:Array<T>) return arr.length>0;
+  static public function notEmpty<T>(arr:Array<T>) : Bool return arr.length>0;
   /*
    * 1..n
    */
@@ -583,16 +583,16 @@ typedef Head = {
     then(p, function (x) { trace(f(x)); return x;} );
 
   public static function identifier(x : String) : Void -> Parser<String,String>
-    return LazyMacro.lazy(function (input : Input<String>)
+    return (function (input : Input<String>)
       if (input.startsWith(x)) {
         return Success(x, input.drop(x.length));
       } else {
         return Failure((x + " expected and not found").errorAt(input).newStack(), input, false);
       }
-    );
+    ).lazy();
 
   public static function regexParser(r : EReg) : Void -> Parser<String,String>
-    return LazyMacro.lazy(function (input : Input<String>) return
+    return (function (input : Input<String>) return
       if (input.matchedBy(r)) {
         var pos = r.matchedPos();
         if (pos.pos == 0) {
@@ -603,7 +603,7 @@ typedef Head = {
       } else {
         Failure((r + " not matched").errorAt(input).newStack(), input, false);
       }
-    );
+    ).lazy();
 
   public static function withError<I,T>(p : Void -> Parser<I,T>, f : String -> String ) : Void -> Parser<I,T>
     return LazyMacro.lazy(function (input : Input<I>) {

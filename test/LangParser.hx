@@ -133,10 +133,10 @@ class LambdaTest {
     ].ors().then(Primitive).tag("primitive").lazyF();
     
   static var lambdaP : Void -> Parser<String, RExpression> =
-	LazyMacro.lazyF( identifierP.and_(arrowP).and(maybeRet(expressionP.commit())).then(function (p) return LambdaExpr(p.a, p.b)).tag("lambda") );
-  
+	( identifierP.and_(arrowP).and(maybeRet(expressionP.commit())).then(function (p) return LambdaExpr(p.a, p.b)).tag("lambda") ).lazyF();
+
   static var applicationP : Void -> Parser<String, RExpression> =
-	LazyMacro.lazyF( rExpressionP.and(identifierP).then(function (p) return Apply(p.a, p.b)).tag("application") );
+	( rExpressionP.and(identifierP).then(function (p) return Apply(p.a, p.b)).tag("application") ).lazyF();
   
   static var rExpressionP : Void -> Parser<String, RExpression> =
     [
@@ -147,10 +147,10 @@ class LambdaTest {
     ].ors().memo().tag("RExpression").lazyF();
     
   static var letExpressionP : Void -> Parser<String, LetExpression> =
-    LazyMacro.lazyF( identifierP.and_(equalsP).and(maybeRet(rExpressionP.commit())).then(function (p) return { ident: p.a, expr: p.b }).tag("let expression") );
+    ( identifierP.and_(equalsP).and(maybeRet(rExpressionP.commit())).then(function (p) return { ident: p.a, expr: p.b }).tag("let expression") ).lazyF();
   
   public static var expressionP : Void -> Parser<String, Expression> =
-	LazyMacro.lazyF(
+	(
 		(letP._and(maybeRet(maybeRet(letExpressionP).rep1sep(commaP.or(retP)).and_(commaP.option())).and_(maybeRet(inP)).commit())).option().and(maybeRet(rExpressionP)).then(function (p) {
 		  var lets =
 			switch (p.a) {
@@ -159,13 +159,13 @@ class LambdaTest {
 			};
 		  return { lets : lets, expr : p.b };
 		}).tag("expression")
-	);
+	).lazyF();
     
     
   static var definitionP =
-	LazyMacro.lazyF(
+	(
 		maybeRet(identifierP).and_(equalsP).and(maybeRet(expressionP.commit())).then(function (p) return { name : p.a, expr : p.b } ).tag("definition")
-	);
+	).lazyF();
     
   public static var programP =
     definitionP.many().tag("program").commit().lazyF();
