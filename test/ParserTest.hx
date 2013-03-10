@@ -57,11 +57,11 @@ class JsonParser {
   static  var retP = ("\r".identifier().or("\n".identifier()));
   
   static  var spacingP =
-	LazyMacro.lazyF([
+	[
       spaceP.oneMany(),
       tabP.oneMany(),
       retP.oneMany()
-    ].ors().many());
+    ].ors().many().lazyF();
   
   static  var leftAccP = withSpacing("{".identifier());
   static  var rightAccP = withSpacing("}".identifier());
@@ -126,7 +126,7 @@ class LRTest {
   
   static var posNumberP = posNumberR.regexParser().tag("number");
     
-  static var binop = LazyMacro.lazyF( (expr.and_(plusP)).andWith(expr.commit(), function (a, b) return a + " + " + b).tag("binop") );
+  static var binop = ( (expr.and_(plusP)).andWith(expr.commit(), function (a, b) return a + " + " + b).tag("binop") );
   public static var expr : Void -> Parser<String,String> = binop.or(posNumberP).memo().tag("expression");
 }
 
@@ -184,7 +184,9 @@ class ParserTest {
 
     ok = ok && expectSuccess("abc", MonadParserTest.parser(), ["a","b","c"]);
 
-    trace(ok ? "test passed " : "test FAILED!");    
+    trace(ok ? "test passed " : "test FAILED!");
+    
+    
   }
   
 }

@@ -957,19 +957,7 @@ LambdaTest.maybeRet = function(p) {
 	return Parsers.andWith(Parsers.option(LambdaTest.spacingOrRetP),p,Parsers.sndParam);
 }
 LambdaTest.withSpacing = function(p) {
-	return (function($this) {
-		var $r;
-		var value = null;
-		var computationRequested = false;
-		$r = function() {
-			if(!computationRequested) {
-				computationRequested = true;
-				value = (Parsers.andWith(LambdaTest.spacingP,p,Parsers.sndParam))();
-			}
-			return value;
-		};
-		return $r;
-	}(this));
+	return Parsers.andWith(LambdaTest.spacingP,p,Parsers.sndParam);
 }
 var LangParser = function() { }
 LangParser.__name__ = ["LangParser"];
@@ -977,13 +965,13 @@ LangParser.tryParse = function(str,parser,withResult,output) {
 	try {
 		var res = haxe.Timer.measure(function() {
 			return parser({ content : com.mindrocks.text.Tools.enumerable(str), offset : 0, memo : { memoEntries : new haxe.ds.StringMap(), recursionHeads : new haxe.ds.StringMap(), lrStack : com.mindrocks.functional.Nil._nil}});
-		},{ fileName : "LangParser.hx", lineNumber : 181, className : "LangParser", methodName : "tryParse"});
+		},{ fileName : "LangParser.hx", lineNumber : 180, className : "LangParser", methodName : "tryParse"});
 		var $e = (res);
 		switch( $e[1] ) {
 		case 0:
 			var res_eSuccess_1 = $e[3], res_eSuccess_0 = $e[2];
 			var remaining = res_eSuccess_1.content.range(res_eSuccess_1.offset);
-			if(StringTools.trim(remaining).length == 0) haxe.Log.trace("success!",{ fileName : "LangParser.hx", lineNumber : 187, className : "LangParser", methodName : "tryParse"}); else haxe.Log.trace("cannot parse " + remaining,{ fileName : "LangParser.hx", lineNumber : 189, className : "LangParser", methodName : "tryParse"});
+			if(StringTools.trim(remaining).length == 0) haxe.Log.trace("success!",{ fileName : "LangParser.hx", lineNumber : 186, className : "LangParser", methodName : "tryParse"}); else haxe.Log.trace("cannot parse " + remaining,{ fileName : "LangParser.hx", lineNumber : 188, className : "LangParser", methodName : "tryParse"});
 			withResult(res_eSuccess_0);
 			break;
 		case 1:
@@ -997,15 +985,15 @@ LangParser.tryParse = function(str,parser,withResult,output) {
 			break;
 		}
 	} catch( e ) {
-		haxe.Log.trace("Error " + Std.string(e),{ fileName : "LangParser.hx", lineNumber : 203, className : "LangParser", methodName : "tryParse"});
+		haxe.Log.trace("Error " + Std.string(e),{ fileName : "LangParser.hx", lineNumber : 202, className : "LangParser", methodName : "tryParse"});
 	}
 }
 LangParser.langTest = function() {
 	var toOutput = function(str) {
-		haxe.Log.trace(StringTools.replace(str," ","_"),{ fileName : "LangParser.hx", lineNumber : 210, className : "LangParser", methodName : "langTest"});
+		haxe.Log.trace(StringTools.replace(str," ","_"),{ fileName : "LangParser.hx", lineNumber : 209, className : "LangParser", methodName : "langTest"});
 	};
 	LangParser.tryParse("\r\n      toto =\r\n        let\r\n          a = 56\r\n          b = d\r\n          v = a =>\r\n            let x = 12\r\n            in x\r\n          b = d\r\n        in\r\n          add c d          \r\n    ",LambdaTest.programP(),function(res) {
-		haxe.Log.trace("Parsed " + Std.string(res),{ fileName : "LangParser.hx", lineNumber : 226, className : "LangParser", methodName : "langTest"});
+		haxe.Log.trace("Parsed " + Std.string(res),{ fileName : "LangParser.hx", lineNumber : 225, className : "LangParser", methodName : "langTest"});
 	},toOutput);
 }
 var JsValue = { __ename__ : true, __constructs__ : ["JsObject","JsArray","JsData"] }
@@ -1207,19 +1195,6 @@ Type["typeof"] = function(v) {
 com.mindrocks.macros = {}
 com.mindrocks.macros.LazyMacro = function() { }
 com.mindrocks.macros.LazyMacro.__name__ = ["com","mindrocks","macros","LazyMacro"];
-com.mindrocks.macros.LazyMacro.alreadyLazy = function(type) {
-	var $e = (type);
-	switch( $e[1] ) {
-	case 4:
-		var type_eTFun_0 = $e[2];
-		return type_eTFun_0.length == 0;
-	case 7:
-		var type_eTLazy_0 = $e[2];
-		return com.mindrocks.macros.LazyMacro.alreadyLazy(type_eTLazy_0());
-	default:
-		return false;
-	}
-}
 com.mindrocks.monads = {}
 com.mindrocks.monads.MonadOp = { __ename__ : true, __constructs__ : [] }
 com.mindrocks.monads.Option = { __ename__ : true, __constructs__ : ["None","Some"] }
@@ -1535,17 +1510,6 @@ haxe.ds.StringMap.prototype = {
 	}
 	,__class__: haxe.ds.StringMap
 }
-haxe.macro = {}
-haxe.macro.Type = { __ename__ : true, __constructs__ : ["TMono","TEnum","TInst","TType","TFun","TAnonymous","TDynamic","TLazy","TAbstract"] }
-haxe.macro.Type.TMono = function(t) { var $x = ["TMono",0,t]; $x.__enum__ = haxe.macro.Type; $x.toString = $estr; return $x; }
-haxe.macro.Type.TEnum = function(t,params) { var $x = ["TEnum",1,t,params]; $x.__enum__ = haxe.macro.Type; $x.toString = $estr; return $x; }
-haxe.macro.Type.TInst = function(t,params) { var $x = ["TInst",2,t,params]; $x.__enum__ = haxe.macro.Type; $x.toString = $estr; return $x; }
-haxe.macro.Type.TType = function(t,params) { var $x = ["TType",3,t,params]; $x.__enum__ = haxe.macro.Type; $x.toString = $estr; return $x; }
-haxe.macro.Type.TFun = function(args,ret) { var $x = ["TFun",4,args,ret]; $x.__enum__ = haxe.macro.Type; $x.toString = $estr; return $x; }
-haxe.macro.Type.TAnonymous = function(a) { var $x = ["TAnonymous",5,a]; $x.__enum__ = haxe.macro.Type; $x.toString = $estr; return $x; }
-haxe.macro.Type.TDynamic = function(t) { var $x = ["TDynamic",6,t]; $x.__enum__ = haxe.macro.Type; $x.toString = $estr; return $x; }
-haxe.macro.Type.TLazy = function(f) { var $x = ["TLazy",7,f]; $x.__enum__ = haxe.macro.Type; $x.toString = $estr; return $x; }
-haxe.macro.Type.TAbstract = function(t,params) { var $x = ["TAbstract",8,t,params]; $x.__enum__ = haxe.macro.Type; $x.toString = $estr; return $x; }
 function $iterator(o) { if( o instanceof Array ) return function() { return HxOverrides.iter(o); }; return typeof(o.iterator) == 'function' ? $bind(o,o.iterator) : o.iterator; };
 var $_;
 function $bind(o,m) { var f = function(){ return f.method.apply(f.scope, arguments); }; f.scope = o; f.method = m; return f; };
@@ -1909,21 +1873,9 @@ JsonParser.jsonParser = Parsers.then(Parsers.andWith(Parsers.andWith(JsonParser.
 LRTest.posNumberR = new EReg("[0-9]+","");
 LRTest.plusP = Parsers.identifier("+");
 LRTest.posNumberP = Parsers.tag(Parsers.regexParser(LRTest.posNumberR),"number");
-LRTest.binop = (function($this) {
-	var $r;
-	var value = null;
-	var computationRequested = false;
-	$r = function() {
-		if(!computationRequested) {
-			computationRequested = true;
-			value = (Parsers.tag(Parsers.andWith(Parsers.andWith(LRTest.expr,LRTest.plusP,Parsers.fstParam),Parsers.commit(LRTest.expr),function(a,b) {
-				return a + " + " + b;
-			}),"binop"))();
-		}
-		return value;
-	};
-	return $r;
-}(this));
+LRTest.binop = Parsers.tag(Parsers.andWith(Parsers.andWith(LRTest.expr,LRTest.plusP,Parsers.fstParam),Parsers.commit(LRTest.expr),function(a,b) {
+	return a + " + " + b;
+}),"binop");
 LRTest.expr = Parsers.tag(Parsers.memo(Parsers.or(LRTest.binop,LRTest.posNumberP)),"expression");
 MonadParserTest.parser = Parsers.andThen(Parsers.identifier("a"),function(a) {
 	return Parsers.andThen(Parsers.identifier("b"),function(b) {

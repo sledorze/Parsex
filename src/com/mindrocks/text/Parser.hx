@@ -402,7 +402,7 @@ typedef Head = {
             }
           case Failure(_, _, _):
             var r : ParseResult<I, V> = untyped res;
-            return r;
+            return r;	
         }
       }
     });
@@ -451,7 +451,7 @@ typedef Head = {
   static var defaultFail =
     fail("not matched", false);
 
-  static public function forPredicate<T>(pred : T -> Bool) return function (x : T) return
+  inline static public function forPredicate<I, T>(pred : T -> Bool) : T -> (Void -> Parser<I, T>) return function (x : T) return
     pred(x) ? success(x) : defaultFail;
 
   inline public static function filter<I,T>(p : Void -> Parser<I,T>, pred : T -> Bool) : Void -> Parser <I,T> return

@@ -78,18 +78,17 @@ class LambdaTest {
   static  var retP = ("\r".identifier().or("\n".identifier())).lazyF();
   
   static  var spacingP =
-	LazyMacro.lazyF(
     [
       spaceP.oneMany(),
       tabP.oneMany(),
-    ].ors().many());
+    ].ors().many().lazyF();
   
   static  var spacingOrRetP =
-	LazyMacro.lazyF([
+	[
       spaceP.oneMany(),
       tabP.oneMany(),
       retP.oneMany()
-    ].ors().many());
+	].ors().many().lazyF();
     
   static  var stringStartP = withSpacing("\"".identifier());
   static  var stringStopP = "\"".identifier();
@@ -107,7 +106,7 @@ class LambdaTest {
     spacingOrRetP.option()._and(p);
     
   static function withSpacing<T>(p : Void -> Parser<String, T>) : Void -> Parser<String, T> return
-  LazyMacro.lazyF( spacingP._and(p) );
+	spacingP._and(p);
 
   static var identifierP =
     withSpacing(identifierR.regexParser()).tag("identifier").lazyF();
