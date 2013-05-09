@@ -1,0 +1,13 @@
+{
+  "name": "Parsex",
+  "url": "https://github.com/sledorze/Parsex",
+  "license": "BSD",
+  "tags": ["cross","utility"],
+  "description": "General Parser API providing Packrat Parsers combinators and a Monadic support (requiers monax)",
+  "version": "1.4.0",
+  "releasenote": "Cope with changes in Haxe",
+  "contributors": ["sledorze"],
+  "dependencies": {
+    "monax": "1.4.0"
+  }
+}
