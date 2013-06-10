@@ -229,19 +229,3 @@ class LangParser {
   }
   
 }
-
-//  Sensitive layout requiers another kind of parsing phase, .. and must provide a way to reorganize code while keeping position information / coherence (without the lexer phase!)
-//  Regarder ce qui avait ete propose pour les quotations et le layout.. (peut etre qq chose d'interessant a cette intersection.. -> Tree at language level)  
-
-// Compile-time et runtime staging blurred.. type level manipulation to remove by param number repetition.
-// Very lightweight code with runtime inlining (call site specification with depth limitation).
-// Type class approach (variables implicits and call site inlining).
-// Type states and phantom types.
-// Pattern matching and auto boxing of Anonymous unions.
-// Trampoline.
-// Scope manipulation in metaprogramming (!?! Relationnal Query Style? awesome.. cope with fresh names, etc.. annotation propagation)
-// No inheritence! Structural typing (and good error report).
-// Monad support aka Higher order Kinds.
-// Operator overloading and free variable naming (think JSON - mongodb needs).
-// Dependent typing (almost thanks to staging).
-// Intuition; Neko makes it at the wrong level (should be web).
