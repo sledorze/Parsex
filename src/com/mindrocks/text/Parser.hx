@@ -402,6 +402,7 @@ typedef Head = {
 
   inline public static function sndParam<A,B>(_ : A, b : B) return b;
 
+  @:native("__and") // Prevent a bug with hxcpp
   inline public static function _and < I, T, U > (p1 : Void -> Parser<I,T>, p2 : Void -> Parser<I,U>) : Void -> Parser < I, U > return
     andWith(p1, p2, sndParam);
 
