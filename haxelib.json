@@ -9,5 +9,6 @@
   "contributors": ["sledorze"],
   "dependencies": {
     "monax": "1.4.0"
-  }
+  },
+  "classPath": "src"
 }

@@ -5,12 +5,14 @@ package com.mindrocks.text;
  * @author sledorze
  */
 
+#if monax
 import com.mindrocks.monads.Monad;
+#end
 //import com.mindrocks.text.Parser;
 using com.mindrocks.text.Parser;
 
 class ParserM {
-
+  #if monax
   macro public static function dO(body : haxe.macro.Expr) return
     Monad._dO("ParserM", body, haxe.macro.Context);
 
@@ -22,5 +24,5 @@ class ParserM {
 
   inline public static function flatMap < I, T, U > (p1 : Void -> Parser < I, T > , fp2 : T -> (Void -> Parser < I, U > )) : Void -> Parser < I, U >
     return p1.andThen(fp2);
-    
+  #end
 }

@@ -20,13 +20,27 @@ enum Option<T> {
 
 typedef Lazy<T> = Void -> T
 
-class Functionnal {
+class Functional {
 
   public static function get<T>(o : Option<T>) : T
     switch(o) {
       case Some(x) : return x;
       default : throw "Error Option get on None";
-    }  
+    }
+    
+  @:note("those brackets are there to fox the Java compiler")
+  static public inline function lazy<PI, R>(f: Void -> R): Void->R {
+    var r : R   = null;
+
+    return function() {
+      return if (r == null) {
+        r = untyped (false);//<---
+        r = f(); r;
+      }else{
+        r;
+      }
+    }
+  }
 }
 
 
@@ -35,8 +49,8 @@ class Functionnal {
 // such.
 class List<T> {
   
-  public var head (get_head, null): T;
-  public var tail (get_tail, null): List<T>;
+  public var head (get, null): T;
+  public var tail (get, null): List<T>;
 
   private var _headV : T;
   private var _tailV : List<T>;

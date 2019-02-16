@@ -1,0 +1,4 @@
+-main Main
+-cp src
+-cp test
+-js bin/parsex.js

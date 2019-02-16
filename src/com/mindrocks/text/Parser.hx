@@ -2,10 +2,9 @@ package com.mindrocks.text;
 
 import com.mindrocks.text.InputStream;
 
-import com.mindrocks.functional.Functional;
 using com.mindrocks.functional.Functional;
+import com.mindrocks.functional.Functional.lazy;
 
-using com.mindrocks.macros.LazyMacro;
 
 using Lambda;
 using com.mindrocks.text.Parser;
@@ -32,7 +31,7 @@ enum MemoEntry {
   MemoLR(lr : LR);
 }
 
-typedef MemoKey = String
+typedef MemoKey = String;
 
 class ParserObj {
   inline public static function castType<I,T, U>(p : Parser<I,T>) : Parser<I,U> return
@@ -189,7 +188,7 @@ enum ParseResult<I,T> {
   Failure(errorStack : FailureStack, rest : Input<I>, isError : Bool);
 }
 
-typedef Parser<I,T> = Input<I> -> ParseResult<I,T>
+typedef Parser<I,T> = Input<I> -> ParseResult<I,T>;
 
 typedef LR = {
   seed: ParseResult<Dynamic,Dynamic>,
@@ -332,11 +331,11 @@ typedef Head = {
    * Lift a parser to a packrat parser (memo is derived from scala's library)
    */
   public static function memo<I,T>(_p : Void -> Parser<I,T>) : Void -> Parser<I,T>
-    return LazyMacro.lazy({
+    return lazy(()->{
       // generates an uid for this parser.
       var uid = parserUid();
       function genKey(pos : Int) return uid+"@"+pos;
-      function (input :Input<I>) {
+      return function (input :Input<I>):ParseResult<I,T> {
 
         switch (recall(_p(), genKey, input)) {
           case None :
@@ -372,16 +371,16 @@ typedef Head = {
     });
 
   public static function fail<I,T>(error : String, isError : Bool) : Void -> Parser <I,T>
-    return LazyMacro.lazy(function (input :Input<I>) return Failure(error.errorAt(input).newStack(), input, isError));
+    return lazy(() -> function (input :Input<I>) return Failure(error.errorAt(input).newStack(), input, isError));
 
-  public static function success < I, T > (v : T) : Void -> Parser <I,T>  return
-	(function (input) return Success(v, input)).lazy();
+  public static function success<I, T>(v : T):Void -> Parser<I,T>  return
+	  lazy(() -> (function (input) return Success(v, input)));
 
   public static function identity<I,T>(p : Void -> Parser<I,T>) : Void -> Parser <I,T> return p;
 
   public static function andWith < I, T, U, V > (p1 : Void -> Parser<I,T>, p2 : Void -> Parser<I,U>, f : T -> U -> V) : Void -> Parser <I,V>
-    return LazyMacro.lazy({
-      function (input) {
+    return lazy(() -> {
+      return function (input) {
         var res = p1()(input);
         switch (res) {
           case Success(m1, r) :
@@ -413,7 +412,7 @@ typedef Head = {
 
   // aka flatmap
   public static function andThen < I, T, U > (p1 : Void -> Parser<I, T>, fp2 : T -> (Void -> Parser<I, U>)) : Void -> Parser < I, U >
-    return LazyMacro.lazy({
+    return lazy(()->{
       function (input) {
         var res = p1()(input);
         switch (res) {
@@ -427,7 +426,7 @@ typedef Head = {
 
   // map
   public static function then < I, T, U > (p1 : Void -> Parser<I,T>, f : T -> U) : Void -> Parser < I, U >
-    return LazyMacro.lazy({
+    return lazy(()->{
       function (input) {
         var res = p1()(input);
         switch (res) {
@@ -450,7 +449,7 @@ typedef Head = {
    * Generates an error if the parser returns a failure (an error make the choice combinator fail with an error without evaluating alternatives).
    */
   public static function commit < I, T > (p1 : Void -> Parser<I,T>) : Void -> Parser < I, T >
-    return LazyMacro.lazy({
+    return lazy(()->{
       function (input) {
         var res = p1()(input);
         switch(res) {
@@ -462,7 +461,7 @@ typedef Head = {
     });
 
   public static function or < I,T > (p1 : Void -> Parser<I,T>, p2 : Void -> Parser<I,T>) : Void -> Parser < I, T >
-    return LazyMacro.lazy({
+    return lazy(()->{
       function (input) {
         var res = p1()(input);
         switch (res) {
@@ -479,7 +478,7 @@ typedef Head = {
 */
   // unrolled version of the above one
   public static function ors<I,T>(ps : Array < Void -> Parser<I,T> > ) : Void -> Parser<I,T>
-    return LazyMacro.lazy({
+    return lazy(()->{
       function (input) {
         var pIndex = 0;
         while (pIndex < ps.length) {
@@ -498,7 +497,7 @@ typedef Head = {
    * 0..n
    */
   public static function many < I,T > (p1 : Void -> Parser<I,T>) : Void -> Parser < I, Array<T> >
-    return LazyMacro.lazy( {
+    return lazy(()->{
       function (input) {
         var parser = p1();
         var arr = [];
@@ -571,16 +570,16 @@ typedef Head = {
     then(p, function (x) { trace(f(x)); return x;} );
 
   public static function identifier(x : String) : Void -> Parser<String,String>
-    return (function (input : Input<String>)
+    return lazy(()->(function (input : Input<String>)
       if (input.startsWith(x)) {
         return Success(x, input.drop(x.length));
       } else {
         return Failure((x + " expected and not found").errorAt(input).newStack(), input, false);
       }
-    ).lazy();
+    ));
 
   public static function regexParser(r : EReg) : Void -> Parser<String,String>
-    return (function (input : Input<String>) return
+    return lazy(()->(function (input : Input<String>) return
       if (input.matchedBy(r)) {
         var pos = r.matchedPos();
         if (pos.pos == 0) {
@@ -591,10 +590,10 @@ typedef Head = {
       } else {
         Failure((r + " not matched").errorAt(input).newStack(), input, false);
       }
-    ).lazy();
+    ));
 
   public static function withError<I,T>(p : Void -> Parser<I,T>, f : String -> String ) : Void -> Parser<I,T>
-    return LazyMacro.lazy(function (input : Input<I>) {
+    return lazy(()->function (input : Input<I>) {
       switch(p()(input)) {
         case Failure(err, input, isError): return Failure(err.report((f(err.head.msg)).errorAt(input)), input, isError);
         case r: return r;

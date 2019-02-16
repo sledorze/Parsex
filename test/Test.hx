@@ -7,7 +7,7 @@ package ;
 
 class Test {
 	
-	static function main() {
+	public static function main() {
 		LangParser.langTest();
 		ParserTest.jsonTest();
 	}
