@@ -9,6 +9,7 @@ class SimpleParser{
         a.testIdentitifierSuccess();
         a.testOption();
         a.testRegex();
+        a.testRecure();
   }
   public function new(){
 
@@ -38,4 +39,41 @@ class SimpleParser{
         default:
     }
   }
+  function testRecure(){
+    var t = "1+2+3x4";
+    var o = p_expr.parse(t);
+      trace(o);
+  }
+  static var p_int = ~/[0-9]+/.regexParser().then(
+    (x) -> Num(Std.parseInt(x))
+  );
+  static var p_star_id = "x".identifier();
+  static var p_plus_id = "+".identifier();
+
+  static var p_expr :Parser<String,Expr> = {
+    [
+        p_mult.lazy(),
+        p_plus.lazy(),
+        p_int
+    ].ors().memo();
+  }
+  static function p_mult(){
+    return 
+      p_expr
+      .and_(p_star_id)
+      .and(p_expr)
+      .then((tp) -> Mult(tp.a,tp.b));
+  }
+  static function p_plus(){
+    return 
+      p_expr
+      .and_(p_plus_id)
+      .and(p_expr)
+      .then((tp) -> Plus(tp.a,tp.b));
+  }
+}
+enum Expr{
+  Mult(l:Expr,r:Expr);
+  Plus(l:Expr,r:Expr);
+  Num(v:Int);
 }

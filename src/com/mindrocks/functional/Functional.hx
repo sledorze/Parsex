@@ -192,3 +192,9 @@ class Nil<T> extends List<T> {
   }
   
 }
+
+abstract Opaque(Void->Void){
+  public function new(){
+    this = () -> {};
+  }  
+}

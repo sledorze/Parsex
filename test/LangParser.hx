@@ -130,7 +130,7 @@ class LambdaTest {
     
   static function applicationP() : Parser<String, RExpression>{
     return
-      rExpressionP().and(identifierP)
+      rExpressionP.and(identifierP)
       .then(function (p) return Apply(p.a, p.b)).tag("application");
   }
 
@@ -140,24 +140,21 @@ class LambdaTest {
       .and(maybeRet(expressionP.commit()))
       .then(function (p) return LambdaExpr(p.a, p.b)).tag("lambda") );
   }
-  static function rExpressionP():Parser<String, RExpression>{
-    var exprs = [
+  static var rExpressionP:Parser<String, RExpression> = {
+    [
       lambdaP(),
       applicationP(),
       identP,
       primitiveP
-    ];
-    trace(exprs[1]);
-    trace(applicationP);
-    return exprs.ors().memo().tag("RExpression"); 
+    ].ors().memo().tag("RExpression"); 
   } 
   static var letExpressionP : Parser<String, LetExpression> =
-    ( identifierP.and_(equalsP).and(maybeRet(rExpressionP().commit())).then(function (p) return { ident: p.a, expr: p.b }).tag("let expression") );
+    ( identifierP.and_(equalsP).and(maybeRet(rExpressionP.commit())).then(function (p) return { ident: p.a, expr: p.b }).tag("let expression") );
   
   public static var expressionP : Parser<String, Expression> =
 	(
 
-		(letP._and(maybeRet(maybeRet(letExpressionP).rep1sep(commaP.or(retP)).and_(commaP.option())).and_(maybeRet(inP)).commit())).option().and(maybeRet(rExpressionP())).then(function (p) {
+		(letP._and(maybeRet(maybeRet(letExpressionP).rep1sep(commaP.or(retP)).and_(commaP.option())).and_(maybeRet(inP)).commit())).option().and(maybeRet(rExpressionP)).then(function (p) {
 		  var lets =
 			switch (p.a) {
 			  case Some(ls): ls;
@@ -243,8 +240,9 @@ class LangParser {
     );
   }
   public static function numberParserTest(){
-    var a = LambdaTest.numberR.regexParser().tag("testing");
-    var b = a.parse("21");
+    //var a = LambdaTest.numberR;//.tag("testing");
+    //trace(a);
+    //var b = a.parse("21");
  }
   
 }

@@ -2,7 +2,8 @@ package com.mindrocks.text.parsers;
 
 class MemoP<I,O> extends Delegate<I,O>{ 
   public function new(delegation:Parser<I,O>){
-    super(delegation,new UID());
+    super(delegation);
+    this.uid = new UID();
   }
   function genKey(pos : Int) {  
     return this.id+"@"+pos;
@@ -15,7 +16,6 @@ class MemoP<I,O> extends Delegate<I,O>{
         ipt.memo.lrStack  = ipt.memo.lrStack.cons(base);
         ipt.updateCacheAndGet(genKey, MemoLR(base));
 
-        
         var res = delegation.parse(ipt);
 
         ipt.memo.lrStack = ipt.memo.lrStack.tail;

@@ -1,5 +1,6 @@
 package com.mindrocks.text;
 
+import haxe.PosInfos;
 using com.mindrocks.functional.Functional;
 
 import com.mindrocks.functional.Functional.defined;

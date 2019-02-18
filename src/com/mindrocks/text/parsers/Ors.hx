@@ -10,8 +10,9 @@ class Ors<I,T> extends Base<I,T,Array<Parser<I,T>>>{
     while (pIndex < delegation.length) {
       var p   = delegation[pIndex];
       if(p == null){
-        p = '${delegation.length} $pIndex'.fail(true);
+        //p = '${delegation.length} $pIndex'.fail(true);
       }
+      //trace(p);
       var res = p.parse(ipt);
       switch (res) {
         case Success(_, _) : 

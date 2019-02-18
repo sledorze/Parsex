@@ -23,11 +23,14 @@ class LRs{
     switch (input.getRecursionHead()) {
       case None: return cached;
       case Some(head):
-        if (cached == None && !(head.involvedSet.cons(head.headParser).contains(p))) {
+        if (cached == None && !(head.involvedSet.cons(head.headParser).contains(cast p))) {
           return Some(MemoParsed(Failure("dummy ".errorAt(input).newStack(), input, false)));
         }
-        if (head.evalSet.contains(p)) {
-          head.evalSet = head.evalSet.filter(function (x) return x != p);
+        $type(p);
+        $type(head.evalSet.contains);
+        if (head.evalSet.contains(cast p)) {
+          head.evalSet = head.evalSet
+            .filter(function (x:Parser<Dynamic,Dynamic>) return cast (x) != cast(p));
 
           var memo = MemoParsed(p.parse(input));
           input.updateCacheAndGet(genKey, memo); // beware; it won't update lrStack !!! Check that !!!
@@ -41,7 +44,6 @@ class LRs{
       recDetect.head = Some(p.mkHead());
 
     var stack = input.memo.lrStack;
-
     var h = recDetect.head.get(); // valid (see above)
     while (stack.head.rule != p) {
       var head = stack.head;
@@ -95,6 +97,6 @@ class LRs{
    * Lift a parser to a packrat parser (memo is derived from scala's library)
    */
   public static function memo<I,T>(p : Parser<I,T>) : Parser<I,T>{
-    return new MemoP(p);
+    return new MemoP(p).asParser();
   };
 }
