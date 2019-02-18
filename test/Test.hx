@@ -8,8 +8,10 @@ package ;
 class Test {
 	
 	public static function main() {
+		LangParser.numberParserTest();
 		LangParser.langTest();
-		ParserTest.jsonTest();
+		//ParserTest.jsonTest();
+		//SimpleParser.test();
 	}
   
 }

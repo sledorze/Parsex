@@ -1,12 +1,16 @@
 package com.mindrocks.functional;
   
+import haxe.PosInfos;
 /**
  * ...
  * @author sledorze
  */
 
 // Minimal functionnal API.
- 
+
+enum Bang{
+  Bang;
+} 
 typedef Tuple2<A,B> = { a : A, b : B } 
 
 class Tuples {
@@ -21,7 +25,22 @@ enum Option<T> {
 typedef Lazy<T> = Void -> T
 
 class Functional {
-
+  public static function defined<T>(v:T,?pos:PosInfos){
+    if(v == null){
+      trace(pos);
+      var next = haxe.CallStack.callStack().filter(
+        (v) -> switch(v){
+          //case FilePos(LocalFunction(_),_,_,_):false;
+          //case LocalFunction(_): false;
+          default : true;
+        }
+      );
+      throw (next);
+    }
+  }
+  public static function here(?pos:PosInfos){
+    return pos;
+  }
   public static function get<T>(o : Option<T>) : T
     switch(o) {
       case Some(x) : return x;
@@ -42,7 +61,6 @@ class Functional {
     }
   }
 }
-
 
 // TODO: would using an enum be faster?
 // Stax does add comparing functions etc. but this library does not require
@@ -128,7 +146,29 @@ class List<T> {
     }
     return null; // dummy line, never used
   }
-
+  public static function append<A>(l:List<A>,r:List<A>){
+    var self = l;
+    each(r,
+      function(v){
+        self = cons(self,v);
+      }
+    );
+    return self;
+  }
+  public static function fold<A,B>(ls:List<A>,fn:A->B->B,s:B){
+    each(ls,
+      (x) -> s = fn(x,s)
+    );
+    return s;
+  }
+  public static function flatMap<A,B>(l:List<A>,fn:A->List<B>){
+    return fold(map(l,
+      (x) -> fn(x)
+    ),
+      (next,memo) -> append(memo,next)
+      ,nil()
+    );
+  }
 }
 
 class Nil<T> extends List<T> {

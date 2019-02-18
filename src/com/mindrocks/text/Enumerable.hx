@@ -1,0 +1,2 @@
+package com.mindrocks.text;
+
