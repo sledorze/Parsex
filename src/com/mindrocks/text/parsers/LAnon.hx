@@ -7,6 +7,7 @@ class LAnon<I,O> extends Anon<I,O>{
     this.closure = closure;
   }
   override public function parse(ipt){
+    trace('parsing');
     return if(method == null){
       var spoof : Dynamic = null;
       if(spoof == null){
