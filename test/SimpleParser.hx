@@ -42,7 +42,7 @@ class SimpleParser{
   function testRecure(){
     var t = "1+2+3x4";
     var o = p_expr.parse(t);
-      trace(o);
+    shouldSucceed(o);
   }
   static var p_int = ~/[0-9]+/.regexParser().then(
     (x) -> Num(Std.parseInt(x))
