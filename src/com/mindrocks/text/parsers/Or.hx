@@ -13,7 +13,5 @@ class Or<I,O> extends Base<I,O,Tuple2<Parser<I,O>,Parser<I,O>>>{
       (res,_,_,er)  -> er? res : delegation.b.parse(ipt) 
     );
   }
-  override public function getDelegation<A,B>():Delegated<A,B>{
-    return cast DConj(delegation);
-  }
+
 }

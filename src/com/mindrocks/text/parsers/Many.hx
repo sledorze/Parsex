@@ -4,13 +4,8 @@ class Many<I,O> extends Base<I,Array<O>,Parser<I,O>>{
   public function new(delegation,?id){
     super(delegation,id);
   }
-  override public function sanity(){
-    if(delegation == null){
-      throw "null delegation";
-    }
-  }
   override public function parse(input){
-    sanity();
+
     var parser  = delegation;
     var arr     = [];
     var matches = true;
@@ -27,7 +22,5 @@ class Many<I,O> extends Base<I,Array<O>,Parser<I,O>>{
         }
     return Success(arr, input);
   }
-  override public function getDelegation<A,B>():Delegated<A,B>{
-    return cast DUnit(delegation);
-  }
+
 }

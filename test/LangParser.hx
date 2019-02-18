@@ -128,11 +128,11 @@ class LambdaTest {
       numberP,
     ].ors().then(Primitive).tag("primitive");
     
-  static var applicationP : Parser<String, RExpression> =
-	( 
-    rExpressionP().and(identifierP)
-    .then(function (p) return Apply(p.a, p.b)).tag("application") 
-  );
+  static function applicationP() : Parser<String, RExpression>{
+    return
+      rExpressionP().and(identifierP)
+      .then(function (p) return Apply(p.a, p.b)).tag("application");
+  }
 
   static function lambdaP(){
     return 
@@ -141,12 +141,15 @@ class LambdaTest {
       .then(function (p) return LambdaExpr(p.a, p.b)).tag("lambda") );
   }
   static function rExpressionP():Parser<String, RExpression>{
-    return [
+    var exprs = [
       lambdaP(),
-      applicationP,
+      applicationP(),
       identP,
       primitiveP
-    ].ors().memo().tag("RExpression"); 
+    ];
+    trace(exprs[1]);
+    trace(applicationP);
+    return exprs.ors().memo().tag("RExpression"); 
   } 
   static var letExpressionP : Parser<String, LetExpression> =
     ( identifierP.and_(equalsP).and(maybeRet(rExpressionP().commit())).then(function (p) return { ident: p.a, expr: p.b }).tag("let expression") );
@@ -240,9 +243,8 @@ class LangParser {
     );
   }
   public static function numberParserTest(){
-    trace(
-      LambdaTest.numberR.regexParser().tag("testing").parse("21")
-    );
+    var a = LambdaTest.numberR.regexParser().tag("testing");
+    var b = a.parse("21");
  }
   
 }

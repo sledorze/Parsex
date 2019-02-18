@@ -2,7 +2,7 @@ package com.mindrocks.text;
 
 @:native("Parsers") class Parsers {
   static public inline function or<I,T>(p1 : Parser<I,T>, p2 : Parser<I,T>):Parser <I,T>{
-    return new Or(p1,p2).asParser();
+    return new Or(p1,p2);
   }
   static public inline function ors<I,T>(ps:Array<Parser<I,T>>):Parser<I,T>{
     return new Ors(ps);
@@ -14,7 +14,7 @@ package com.mindrocks.text;
     return new AndThen(p,fn);
   }
   static public inline function many<I,T>(p1:Parser<I,T>):Parser<I,Array<T>>{
-    return new Many(p1).asParser();
+    return new Many(p1);
   }
   static public inline function oneMany<I,T>(p1:Parser<I,T>){
     return many(p1).filter(

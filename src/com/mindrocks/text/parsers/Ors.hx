@@ -4,15 +4,7 @@ class Ors<I,T> extends Base<I,T,Array<Parser<I,T>>>{
   public function new(delegation,?id){
     super(delegation,id);
   }
-  override public function sanity(){
-    for(i in delegation){
-      if (i == null) {
-        throw "";
-      }else{
-        trace(i.getDelegation());
-      }
-    }
-  }
+
   override public function parse(ipt){
     var pIndex = 0;
     while (pIndex < delegation.length) {
@@ -32,7 +24,5 @@ class Ors<I,T> extends Base<I,T,Array<Parser<I,T>>>{
     }
     return failed("none match".errorAt(ipt).newStack(), ipt, false);
   }
-  override public function getDelegation<A,B>():Delegated<A,B>{
-    return cast DOrs(this.delegation);
-  }
+
 }

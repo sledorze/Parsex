@@ -6,13 +6,7 @@ class With<I,T,U,V> extends Base<I,V,Tuple2<Parser<I,T>,Parser<I,U>>>{
     super({a:l,b:r},id);
     this.transform  = transform;
   }
-  override public function sanity(){
-    if(delegation == null){
-      throw "null delegation";
-    }
-  }
   override public function parse(input:Input<I>){
-    sanity();
     return switch (delegation.a.parse(input)) {
           case Success(m1, r) :
             switch (delegation.b.parse(r)) {
@@ -24,7 +18,5 @@ class With<I,T,U,V> extends Base<I,V,Tuple2<Parser<I,T>,Parser<I,U>>>{
           case x: x.elide();
         }  
     }
-  override public function getDelegation(){
-    return cast DDisj(this.delegation);
-  }
+  
 }

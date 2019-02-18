@@ -17,7 +17,4 @@ class Identifier extends Direct<String,String>{
       );
     }
   }
-  override public function getDelegation(){
-    return cast DDirect(name());
-  }
 }

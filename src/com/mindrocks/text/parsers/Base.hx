@@ -1,6 +1,6 @@
 package com.mindrocks.text.parsers;
 
-class Base<I,O,T> implements Interface<I,O,T>{
+class Base<I,O,T> implements Interface<I,O>{
   static var constructors      : Array<Parser<Dynamic,Dynamic>> = [];
   public var id(get,null)      : Int;
   public function get_id(){
@@ -14,14 +14,8 @@ class Base<I,O,T> implements Interface<I,O,T>{
   public function parse(ipt:Input<I>):ParseResult<I,O>{
     return "default implementation".errorAt(ipt).newStack().toParseResult(ipt,true);
   }
-  public function asParser():Interface<I,O,Dynamic>{
+  public function asParser():Interface<I,O>{
     return cast this;
-  }
-  public function getDelegation():Delegated<Dynamic,Dynamic>{
-    return DDirect(name());
-  }
-  public function sanity(){
-    throw "sanity not implemented";
   }
   function succeed(x:O,xs:Input<I>):ParseResult<I,O>{
     return Success(x,xs);

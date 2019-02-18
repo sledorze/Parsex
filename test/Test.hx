@@ -9,7 +9,7 @@ class Test {
 	
 	public static function main() {
 		LangParser.numberParserTest();
-		LangParser.langTest();
+		//LangParser.langTest();
 		//ParserTest.jsonTest();
 		//SimpleParser.test();
 	}

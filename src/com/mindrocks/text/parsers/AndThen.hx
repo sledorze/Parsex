@@ -13,7 +13,5 @@ class AndThen<I,T,U> extends Base<I,U,Parser<I,T>>{
       case def          : def.elide();
     }
   }
-  override public function getDelegation(){
-    return cast DUnit(delegation);
-  }
+ 
 }

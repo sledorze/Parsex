@@ -1,10 +1,8 @@
 package com.mindrocks.text;
 
-@:forward abstract Parser<I,O>(Interface<I,O,Dynamic>) from Interface<I,O,Dynamic>{
-  public function new(self:Interface<I,O,Dynamic>){
-    this = new LAnon(
-      () -> self
-    );
+@:forward abstract Parser<I,O>(Interface<I,O>) to Interface<I,O>{
+  public function new(self:Interface<I,O>){
+    this = self;
   }
   public function mkHead() : Head return {
     headParser    : elide(),
