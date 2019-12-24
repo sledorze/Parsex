@@ -1,14 +1,20 @@
 package com.mindrocks.text;
 
- @:forward abstract Parser<I,O>(Interface<I,O>) to Interface<I,O>{
+@:forward abstract Parser<I,O>(Interface<I,O>) to Interface<I,O>{
   public function new(self:Interface<I,O>){
     this = self;
+  }
+  @:noUsing static inline public function eof<O>():Parser<String,O>{
+    return Parsers.eof;
   }
   @:noUsing @:from static inline public function fromConstructor<I,O>(fn:Void->Parser<I,O>):Parser<I,O>{
     return pure(new LAnon(fn));
   }
   @:noUsing @:from static inline public function fromInterface<I,O>(it:Interface<I,O>):Parser<I,O>{
     return new Parser(it);
+  }
+  @:noUsing @:from static inline public function fromFunction<I,O>(f:Input<I>->ParseResult<I,O>):Parser<I,O>{
+    return new Anon(f);
   }
   @:noUsing static inline public function pure<I,O>(it:Interface<I,O>):Parser<I,O>{
     return new Parser(it);
@@ -66,6 +72,9 @@ package com.mindrocks.text;
 
   inline public function tag(tag : String):Parser<I,O> {
     return Parsers.tag(pure(this),tag);
+  }
+  inline public function xs(fn):Parser<I,O>{
+    return Parsers.xs(pure(this),fn);
   }
 
   inline public function repsep<U>(sep:Parser<I,U>):Parser<I,Array<O>>{

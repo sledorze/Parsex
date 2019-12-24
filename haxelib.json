@@ -8,7 +8,7 @@
   "releasenote": "Cope with changes in Haxe",
   "contributors": ["sledorze"],
   "dependencies": {
-    "monax": "1.4.0"
+    
   },
   "classPath": "src"
 }

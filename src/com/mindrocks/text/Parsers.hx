@@ -46,11 +46,18 @@ package com.mindrocks.text;
   static public inline function trace<I,T>(p : Parser<I,T>, f : T -> String):Parser<I,T> return
     return then(p,function (x:T) { trace(f(x)); return x;} );
 
-  static public inline function identifier(x : String,pos:PosInfos):Parser<String,String>{
-    return new Identifier(x,pos);
+  static public inline function xs<I,T>(p:Parser<I,T>, f : Input<I> -> Void):Parser<I,T>{
+    return new Parser(new Anon(function(i:Input<I>):ParseResult<I,T>{
+      var out = p.parse(i);
+      f(out.pos());
+      return out;
+    }));
+  }
+  static public inline function identifier(x : String):Parser<String,String>{
+    return new Identifier(x);
   }
 
-  static public inline function regexParser(r : EReg,?pos:PosInfos):Parser<String,String>{
+  static public inline function regexParser(r : EReg):Parser<String,String>{
     return new Regex(r);
   }
     
@@ -80,5 +87,12 @@ package com.mindrocks.text;
   }
   static public inline function option<I,T>(p:Parser<I,T>):Parser<I,Option<T>>{
     return new OptionP(p);
+  }
+  static public inline function eof<T>(input:Input<String>):ParseResult<String,T>{
+    var err = 'not end of file'.errorAt(input).newStack();
+    // trace(input.offset);
+    // trace(input.content.length);
+    // trace(input.content.hasNext());
+    return !input.content.hasNext() ? Functions.succeed(null,input) : Functions.failed(err,input,false);
   }
 }

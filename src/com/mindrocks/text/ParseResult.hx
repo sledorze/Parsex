@@ -15,7 +15,6 @@ package com.mindrocks.text;
       case Success(x, _)    : Std.string(x);
       case Failure(_, _, _) : "";
     }
-
   inline public function elide<U>() : ParseResult<I,U> return cast(this);
 
   public function mkLR(rule,head){
@@ -37,6 +36,12 @@ package com.mindrocks.text;
     return fold(
       (v:T,i:Input<I>)  -> '$v',
       (e,_,_)           -> e.toString()
+    );
+  }
+  public function isSuccess(){
+    return fold(
+      (_,_)   -> true,
+      (_,_,_) -> false
     );
   }
 }

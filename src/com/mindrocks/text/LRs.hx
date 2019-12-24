@@ -26,8 +26,8 @@ class LRs{
         if (cached == None && !(head.involvedSet.cons(head.headParser).contains(cast p))) {
           return Some(MemoParsed(Failure("dummy ".errorAt(input).newStack(), input, false)));
         }
-        $type(p);
-        $type(head.evalSet.contains);
+        //$type(p);
+        //$type(head.evalSet.contains);
         if (head.evalSet.contains(cast p)) {
           head.evalSet = head.evalSet
             .filter(function (x:Parser<Dynamic,Dynamic>) return cast (x) != cast(p));

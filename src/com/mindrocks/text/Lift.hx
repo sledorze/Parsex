@@ -21,8 +21,8 @@ class Lift{
   static public inline function success<I, T>(v : T):Parser<I,T>  
 	  return Parser.pure(new Succeed(v));
   
-  static public inline function identifier(str:String,?pos:PosInfos){
-    return Parsers.identifier(str,pos);
+  static public inline function identifier(str:String){
+    return Parsers.identifier(str);
   }
   static public inline function ors<I,O>(arr:Array<Parser<I,O>>){
     return Parsers.ors(arr);
@@ -30,10 +30,16 @@ class Lift{
   static public inline function option<I,O>(ps:Parser<I,O>):Parser<I,Option<O>>{
     return Parsers.option(ps);
   }
-  static public inline function regexParser(r:EReg,?pos):Parser<String,String>{
-    return Parsers.regexParser(r,pos);
+  static public inline function regexParser(r:EReg):Parser<String,String>{
+    return Parsers.regexParser(r);
   }
   static public inline function lazy<I,O>(f:Void->Parser<I,O>):Parser<I,O>{
     return Parser.fromConstructor(f);
+  }
+}
+class LiftString{
+  static public inline function regexParser(str:String,?opts="g"){
+    var reg = new EReg(str,opts);
+    return Lift.regexParser(reg);
   }
 }

@@ -179,35 +179,6 @@ class LambdaTest {
 
 class LangParser {
 
-  static function tryParse<T>(str : String, parser : Parser<String, T>, withResult : T -> Void, output : String -> Void) {
-    try {
-      var res = 
-        Timer.measure(function () return parser.parse(str));
-      
-      switch (res) {
-        case Success(res, xs):
-          var remaining = xs.rest();
-          if (StringTools.trim(remaining).length == 0) {
-            trace("success!");            
-          } else {
-            trace("cannot parse " + remaining);
-          }
-          withResult(res);
-        case Failure(err, xs, _):
-          var p = xs.textAround();
-          output(p.text);
-          output(p.indicator);          
-          err.map(function (error) {
-            output("Error at " + error.pos + " : " + error.msg);
-          });
-
-          
-      }
-    } catch (e : Dynamic) {
-      throw(e);
-      trace("Error " + Std.string(e));
-    }    
-  }
   
   public static function langTest() {
     
@@ -215,8 +186,7 @@ class LangParser {
       trace(StringTools.replace(str, " ", "_"));
     }
 
-    var input = "
-      toto =
+    var input = "toto =
         let
           a = 56
           b = d

@@ -46,11 +46,16 @@ class Enumerable<C,T> extends Indexable	<C,T> {
 		return o;
 	}
 	public function hasNext():Bool {
+		//trace(index);
 		return index < length;
 	}
-	public function setIndex(i:Int) {
-		this.index = i;
+	public function setIndex(i:Int):Enumerable<C,T> {
+		throw "abstract function";
 		return this;
+	}
+	public function match(fn:T -> Bool,at:Int):Bool{
+		throw "abstract function";
+		return false;
 	}
 	public function prepend(v:T):Enumerable<C,T> {
 		throw "abstract function";
@@ -81,12 +86,18 @@ class StringEnumerable extends Enumerable<String,String>{
 		if (len == null ) len = this.length - loc;
 		return data.substr(loc, len);
 	}
+	override public function match(e:String->Bool,at:Int){
+		return e(this.range(at));
+	}
+	override public function setIndex(i:Int):Enumerable<String,String>{
+		return new StringEnumerable(this.data,i);
+	}
 }
 class ArrayEnumerable<T> extends Enumerable < Array<T>, T > {
 	public function new(v,?i) {
 		super(v, i);
 	}
-	override public function at(i:Int) {
+	override public function at(i:Int):T {
 		return this.data[i];
 	}
 	override private function get_length() {

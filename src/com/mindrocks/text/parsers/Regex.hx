@@ -7,7 +7,7 @@ class Regex extends Direct<String,String>{
     this.stamp = stamp;
   }
   override public function parse(ipt:Input<String>){
-    return if (ipt.matchedBy(stamp)) {
+    return if (ipt.matchedBy(stamp.match)) {
         var pos = stamp.matchedPos();
         if (pos.pos == 0) {
           succeed(ipt.take(pos.len), ipt.drop(pos.len));

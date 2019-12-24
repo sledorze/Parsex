@@ -1,27 +1,23 @@
 package com.mindrocks.text;
 
 @:forward abstract Input<I>(InputT<I>) from InputT<I>{
-  inline public function take(len : Int) : String {
+  inline public function take(?len : Int) : I {
     return this.content.range(this.offset, len);
   }
 
   inline public function drop<I>(len : Int) : Input<I> {
     return {
-      content : this.content,
-      offset : this.offset + len,
-      memo  : this.memo
+      content : this.content.setIndex(this.offset + len),
+      offset  : this.offset + len,
+      memo    : this.memo
     };
   }
-  inline public function startsWith( x : String) : Bool {
-    return take(x.length) == x;
-  }
 
-  inline public function matchedBy(e : EReg) : Bool { // this is deadly unfortunate that RegEx don't support offset and first char maching constraint..
-    return e.match(rest());
+  inline public function matchedBy(e:I->Bool) : Bool { // this is deadly unfortunate that RegEx don't support offset and first char maching constraint..
+    return this.content.match(e,this.offset);
   }
-
-  inline public function rest() : String {
-    return this.content.range(this.offset);
+  inline public function head() : I {
+    return this.content.at(this.offset);
   }
   
   inline public function position<I>(r : Input<I>) : Int return
@@ -82,6 +78,9 @@ package com.mindrocks.text;
     return entry;
   }
   public function toString(){
-    return 'at ${this.offset}:#(${this.tag}) ${rest()}';
+    return 'at ${this.offset}:#(${head()})';
+  }
+  public function hasNext(){
+    return this.content.hasNext();
   }
 }

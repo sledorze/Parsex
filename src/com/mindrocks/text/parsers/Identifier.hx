@@ -7,7 +7,7 @@ class Identifier extends Direct<String,String>{
     this.stamp = stamp;
   }
   override public function parse(ipt:Input<String>){
-    return if(ipt.startsWith(stamp)) {
+    return if(ipt.take(stamp.length) == stamp) {
       succeed(stamp, ipt.drop(stamp.length));
     }else{
       failed(
