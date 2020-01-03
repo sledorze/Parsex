@@ -11,8 +11,8 @@ class Enumerable<C,T> extends Indexable	<C,T> {
 		return o;
 	}
 	public function hasNext():Bool {
-		//trace(index);
-		return index < length;
+
+		return length > index;
 	}
 	public function setIndex(i:Int):Enumerable<C,T> {
 		throw "abstract function";

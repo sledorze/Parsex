@@ -12,6 +12,5 @@ import com.mindrocks.text.Parser;
 import com.mindrocks.text.parsers.*;
 import com.mindrocks.text.ParseResultT;
 
-import com.mindrocks.text.Functions.*;
 
 using com.mindrocks.text.Lift;

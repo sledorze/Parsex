@@ -58,7 +58,7 @@ package com.mindrocks.text;
   }
 
   static public inline function regexParser(r : EReg):Parser<String,String>{
-    return new Regex(r);
+    return new Parser(new Regex(r));
   }
     
   static public inline function rep1sep<I,T,U>(p1:Parser<I,T>,sep : Parser<I,U> ):Parser < I, Array<T> > {
@@ -86,13 +86,13 @@ package com.mindrocks.text;
     ).asParser();
   }
   static public inline function option<I,T>(p:Parser<I,T>):Parser<I,Option<T>>{
-    return new OptionP(p);
+    return new Parser(new OptionP(p));
   }
   static public inline function eof<T>(input:Input<String>):ParseResult<String,T>{
     var err = 'not end of file'.errorAt(input).newStack();
-    // trace(input.offset);
-    // trace(input.content.length);
-    // trace(input.content.hasNext());
-    return !input.content.hasNext() ? Functions.succeed(null,input) : Functions.failed(err,input,false);
+      //trace(input.offset);
+      //trace(input.content.length);
+      //trace(input.content.hasNext());
+    return !input.content.hasNext() ? ParseResult.succeed(null,input) : ParseResult.failed(err,input,false);
   }
 }
