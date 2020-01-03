@@ -1,12 +1,7 @@
 package ;
 
-
 import com.mindrocks.text.Parser;
 import com.mindrocks.text.parsers.Base;
-/**
- * ...
- * @author sledorze
- */
 
 class Test {
 	

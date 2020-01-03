@@ -7,7 +7,7 @@ import com.mindrocks.functional.Functional.defined;
 
 import com.mindrocks.text.DelegatedT;
 import com.mindrocks.text.MemoEntry;
-import com.mindrocks.text.InputStream;
+import com.mindrocks.text.*;
 import com.mindrocks.text.Parser;
 import com.mindrocks.text.parsers.*;
 import com.mindrocks.text.ParseResultT;
